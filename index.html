@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390px, initial-scale=1.0">
+<title>尚岚马术 · 预览</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0A1F44;
+    --navy-light: #1a3a6b;
+    --navy-pale: #eef2f8;
+    --white: #ffffff;
+    --bg: #f2f4f7;
+    --grey: #cccccc;
+    --grey-text: #999999;
+    --text: #333333;
+    --text-light: #666666;
+  }
+
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  }
+
+  /* 手机外壳 */
+  .phone-shell {
+    width: 390px;
+    background: #000;
+    border-radius: 50px;
+    padding: 14px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.1);
+    position: relative;
+  }
+
+  .phone-screen {
+    background: var(--bg);
+    border-radius: 40px;
+    overflow: hidden;
+    height: 780px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 状态栏 */
+  .status-bar {
+    background: var(--navy);
+    padding: 14px 24px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .status-time { color: white; font-size: 15px; font-weight: 600; }
+  .status-icons { color: white; font-size: 12px; }
+
+  /* 导航栏 */
+  .nav-bar {
+    background: var(--navy);
+    padding: 10px 16px 14px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .nav-title { color: white; font-size: 17px; font-weight: 600; letter-spacing: 1px; }
+
+  /* 内容区域可滚动 */
+  .screen-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 70px;
+    scrollbar-width: none;
+  }
+  .screen-content::-webkit-scrollbar { display: none; }
+
+  /* TabBar */
+  .tab-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: row;
+    z-index: 100;
+    padding-bottom: 8px;
+  }
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-item.active .tab-icon { color: var(--navy); }
+  .tab-item.active .tab-label { color: var(--navy); font-weight: 600; }
+  .tab-icon { font-size: 22px; color: #bbb; }
+  .tab-label { font-size: 10px; color: #bbb; margin-top: 2px; }
+
+  /* 页面切换 */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ========== 首页 ========== */
+  .hero {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #0A1F44 0%, #1a3a6b 60%, #2d5a9e 100%);
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .hero-deco {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 80px;
+    opacity: 0.08;
+  }
+  .hero-deco2 {
+    position: absolute;
+    top: 50px;
+    left: -10px;
+    font-size: 60px;
+    opacity: 0.06;
+  }
+  .hero-add {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255,255,255,0.25);
+    font-size: 13px;
+    text-align: center;
+    line-height: 1.8;
+  }
+  .hero-text {
+    padding: 0 20px 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-title-text {
+    display: block;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 3px;
+  }
+  .hero-sub-text {
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* 功能网格 */
+  .menu-grid {
+    display: flex;
+    flex-direction: row;
+    background: white;
+    margin: 14px 16px;
+    border-radius: 16px;
+    padding: 20px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .menu-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .menu-item:active { transform: scale(0.95); }
+  .menu-icon-wrap {
+    width: 52px;
+    height: 52px;
+    background: var(--navy-pale);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .menu-label-text { font-size: 12px; color: var(--navy); font-weight: 500; }
+
+  /* 卡片 */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    margin: 0 16px 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .section-title-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  /* 占位框 */
+  .placeholder {
+    background: #e8ecf0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 12px;
+    text-align: center;
+    border: 1.5px dashed #ccc;
+  }
+
+  .photo-row { display: flex; gap: 8px; }
+  .photo-small { flex: 1; height: 80px; }
+
+  /* 联系方式 */
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+  .contact-row:last-child { border-bottom: none; }
+
+  /* ========== 预约页 ========== */
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .cal-month-text { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .cal-arrow-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--navy-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--navy);
+    font-weight: 300;
+    user-select: none;
+  }
+
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+  }
+  .weekday-text {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    padding: 4px 0;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .cal-day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .day-inner {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+  .day-available .day-inner { background: var(--navy); color: white; font-weight: 600; }
+  .day-available:hover .day-inner { background: var(--navy-light); transform: scale(1.1); }
+  .day-full .day-inner { background: #ddd; color: #aaa; }
+  .day-disabled .day-inner { color: #ccc; }
+  .day-selected .day-inner { background: var(--navy-light) !important; box-shadow: 0 4px 12px rgba(10,31,68,0.4); transform: scale(1.1); }
+
+  /* 教练卡片 */
+  .coach-list { display: flex; flex-direction: column; gap: 10px; }
+  .coach-card-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1.5px solid #eee;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .coach-card-item.selected { border-color: var(--navy); background: var(--navy-pale); }
+  .coach-av {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--navy-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    flex-shrink: 0;
+  }
+  .coach-nm { font-size: 15px; font-weight: 600; color: var(--navy); }
+  .coach-ds { font-size: 12px; color: #999; margin-top: 2px; }
+
+  /* 时间格子 */
+  .time-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .time-chip {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1.5px solid var(--navy);
+    font-size: 13px;
+    color: var(--navy);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .time-chip.selected { background: var(--navy); color: white; }
+
+  /* 确认摘要 */
+  .confirm-summary {
+    background: var(--navy-pale);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .summary-line { font-size: 13px; color: var(--text); }
+
+  /* 按钮 */
+  .btn-navy-full {
+    width: 100%;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-navy-full:hover { background: var(--navy-light); }
+
+  /* 弹窗 */
+  .modal-overlay {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    width: 280px;
+    text-align: center;
+  }
+  .modal-emoji { font-size: 36px; display: block; margin-bottom: 10px; }
+  .modal-title { font-size: 18px; font-weight: 700; color: var(--navy); display: block; margin-bottom: 6px; }
+  .modal-desc { font-size: 13px; color: #666; line-height: 1.6; display: block; margin-bottom: 18px; }
+  .modal-btn {
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 32px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* ========== 马场介绍 ========== */
+  .coach-full-card {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .coach-full-card:last-child { border-bottom: none; }
+  .coach-full-av {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--navy-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    flex-shrink: 0;
+  }
+  .coach-tag-chip {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin: 4px 0;
+  }
+  .coach-bio-text { font-size: 12px; color: #888; line-height: 1.6; }
+
+  .horse-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .horse-card { display: flex; flex-direction: column; gap: 6px; }
+  .horse-photo { height: 100px; }
+  .horse-nm { font-size: 13px; font-weight: 600; color: var(--navy); text-align: center; }
+  .horse-br { font-size: 11px; color: #aaa; text-align: center; }
+
+  /* ========== 课程介绍 ========== */
+  .course-card-item { margin-bottom: 14px; }
+  .course-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .course-nm { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .level-badge {
+    font-size: 11px;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+  .course-desc-text { font-size: 13px; color: #666; line-height: 1.7; margin: 10px 0; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tag-chip {
+    background: var(--navy-pale);
+    color: var(--navy);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* ========== 学员风采 ========== */
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .grid-photo { height: 110px; }
+  .review-card {
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .review-card:last-child { border-bottom: none; }
+  .review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .review-av {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--navy-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: #aaa;
+  }
+  .review-nm { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .review-dt { font-size: 11px; color: #aaa; }
+  .review-txt { font-size: 13px; color: #555; line-height: 1.7; }
+
+  /* 页面标题 */
+  .page-title-text {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    display: block;
+    padding: 18px 16px 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-shell">
+  <div class="phone-screen">
+
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <span class="status-time">16:14</span>
+      <span class="status-icons">●●● 5G 🔋</span>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+      <span class="nav-title" id="nav-title">尚岚马术</span>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="screen-content" id="screen-content">
+
+      <!-- ===== 首页 ===== -->
+      <div class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-deco">🐴</div>
+          <div class="hero-deco2">🏇</div>
+          <div class="hero-add">点击添加<br>封面图片 / 视频</div>
+          <div class="hero-text">
+            <span class="hero-title-text">尚岚马术</span>
+            <span class="hero-sub-text">专业马术训练 · 用心陪伴成长</span>
+          </div>
+        </div>
+
+        <div class="menu-grid">
+          <div class="menu-item" onclick="switchPage('booking')">
+            <div class="menu-icon-wrap">🗓</div>
+            <span class="menu-label-text">课程预约</span>
+          </div>
+          <div class="menu-item" onclick="switchPage('about')">
+            <div class="menu-icon-wrap">🏇</div>
+            <span class="menu-label-text">马场介绍</span>
+          </div>
+          <div class="menu-item" onclick="switchPage('courses')">
+            <div class="menu-icon-wrap">📋</div>
+            <span class="menu-label-text">课程介绍</span>
+          </div>
+          <div class="menu-item" onclick="switchPage('students')">
+            <div class="menu-icon-wrap">⭐</div>
+            <span class="menu-label-text">学员风采</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="section-title-text">最新公告</span>
+          <div class="placeholder" style="height:60px;">点击添加公告内容</div>
+        </div>
+
+        <div class="card">
+          <span class="section-title-text">马场风采</span>
+          <div class="photo-row">
+            <div class="placeholder photo-small">添加照片</div>
+            <div class="placeholder photo-small">添加照片</div>
+            <div class="placeholder photo-small">添加照片</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="section-title-text">联系我们</span>
+          <div class="contact-row"><span>📍</span><span>马场地址（点击填写）</span></div>
+          <div class="contact-row"><span>📞</span><span>联系电话（点击填写）</span></div>
+          <div class="contact-row"><span>🕐</span><span>营业时间（点击填写）</span></div>
+        </div>
+      </div>
+
+      <!-- ===== 预约页 ===== -->
+      <div class="page" id="page-booking">
+        <span class="page-title-text">课程预约</span>
+
+        <div class="card">
+          <div class="cal-header">
+            <div class="cal-arrow-btn" onclick="changeMonth(-1)">‹</div>
+            <span class="cal-month-text" id="cal-month-label"></span>
+            <div class="cal-arrow-btn" onclick="changeMonth(1)">›</div>
+          </div>
+          <div class="weekdays">
+            <span class="weekday-text">日</span><span class="weekday-text">一</span>
+            <span class="weekday-text">二</span><span class="weekday-text">三</span>
+            <span class="weekday-text">四</span><span class="weekday-text">五</span>
+            <span class="weekday-text">六</span>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <div class="card" id="coach-section" style="display:none;">
+          <span class="section-title-text">选择教练</span>
+          <div class="coach-list">
+            <div class="coach-card-item" onclick="selectCoach(1, '张教练')">
+              <div class="coach-av">张</div>
+              <div><div class="coach-nm">张教练</div><div class="coach-ds">障碍专项 · 8年教龄</div></div>
+            </div>
+            <div class="coach-card-item" onclick="selectCoach(2, '李教练')">
+              <div class="coach-av">李</div>
+              <div><div class="coach-nm">李教练</div><div class="coach-ds">舞步专项 · 6年教龄</div></div>
+            </div>
+            <div class="coach-card-item" onclick="selectCoach(3, '王教练')">
+              <div class="coach-av">王</div>
+              <div><div class="coach-nm">王教练</div><div class="coach-ds">综合基础 · 5年教龄</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="time-section" style="display:none;">
+          <span class="section-title-text">选择时间</span>
+          <div class="time-grid" id="time-grid">
+            <div class="time-chip" onclick="selectTime(this, '09:00')">09:00</div>
+            <div class="time-chip" onclick="selectTime(this, '10:30')">10:30</div>
+            <div class="time-chip" onclick="selectTime(this, '14:00')">14:00</div>
+            <div class="time-chip" onclick="selectTime(this, '15:30')">15:30</div>
+            <div class="time-chip" onclick="selectTime(this, '17:00')">17:00</div>
+          </div>
+        </div>
+
+        <div id="confirm-section" style="display:none; padding: 0 16px 16px;">
+          <div class="confirm-summary">
+            <span class="summary-line" id="sum-date"></span>
+            <span class="summary-line" id="sum-coach"></span>
+            <span class="summary-line" id="sum-time"></span>
+          </div>
+          <button class="btn-navy-full" onclick="confirmBooking()">确认预约</button>
+        </div>
+      </div>
+
+      <!-- ===== 马场介绍 ===== -->
+      <div class="page" id="page-about">
+        <span class="page-title-text">马场介绍</span>
+
+        <div class="card">
+          <span class="section-title-text">马场环境</span>
+          <div class="placeholder" style="height:180px; margin-bottom:10px;">点击添加马场照片 / 视频</div>
+          <div class="photo-row">
+            <div class="placeholder photo-small">添加照片</div>
+            <div class="placeholder photo-small">添加照片</div>
+            <div class="placeholder photo-small">添加照片</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="section-title-text">我们的教练</span>
+          <div class="coach-full-card">
+            <div class="coach-full-av">张</div>
+            <div>
+              <div class="coach-nm">张教练</div>
+              <span class="coach-tag-chip">障碍专项</span>
+              <div class="coach-bio-text">点击编辑教练简介，填写资质、经历、擅长方向等</div>
+            </div>
+          </div>
+          <div class="coach-full-card">
+            <div class="coach-full-av">李</div>
+            <div>
+              <div class="coach-nm">李教练</div>
+              <span class="coach-tag-chip">舞步专项</span>
+              <div class="coach-bio-text">点击编辑教练简介，填写资质、经历、擅长方向等</div>
+            </div>
+          </div>
+          <div class="coach-full-card">
+            <div class="coach-full-av">王</div>
+            <div>
+              <div class="coach-nm">王教练</div>
+              <span class="coach-tag-chip">综合基础</span>
+              <div class="coach-bio-text">点击编辑教练简介，填写资质、经历、擅长方向等</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="section-title-text">马厩成员</span>
+          <div class="horse-grid">
+            <div class="horse-card">
+              <div class="placeholder horse-photo">添加照片</div>
+              <span class="horse-nm">马匹名称</span><span class="horse-br">品种</span>
+            </div>
+            <div class="horse-card">
+              <div class="placeholder horse-photo">添加照片</div>
+              <span class="horse-nm">马匹名称</span><span class="horse-br">品种</span>
+            </div>
+            <div class="horse-card">
+              <div class="placeholder horse-photo">添加照片</div>
+              <span class="horse-nm">马匹名称</span><span class="horse-br">品种</span>
+            </div>
+            <div class="horse-card">
+              <div class="placeholder horse-photo">添加照片</div>
+              <span class="horse-nm">马匹名称</span><span class="horse-br">品种</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 课程介绍 ===== -->
+      <div class="page" id="page-courses">
+        <span class="page-title-text">课程介绍</span>
+
+        <div class="card course-card-item">
+          <div class="course-header-row">
+            <span class="course-nm">基础入门课</span>
+            <span class="level-badge">零基础</span>
+          </div>
+          <div class="placeholder" style="height:140px;">点击添加课程照片 / 视频</div>
+          <p class="course-desc-text">点击编辑课程简介，填写课程内容、适合人群、课程目标等详细信息</p>
+          <div class="tag-row">
+            <span class="tag-chip">零基础</span>
+            <span class="tag-chip">青少年</span>
+            <span class="tag-chip">成人</span>
+          </div>
+          <button class="btn-navy-full" onclick="switchPage('booking')">立即预约</button>
+        </div>
+
+        <div class="card course-card-item">
+          <div class="course-header-row">
+            <span class="course-nm">障碍进阶课</span>
+            <span class="level-badge">有基础</span>
+          </div>
+          <div class="placeholder" style="height:140px;">点击添加课程照片 / 视频</div>
+          <p class="course-desc-text">点击编辑课程简介，填写课程内容、适合人群、课程目标等详细信息</p>
+          <div class="tag-row">
+            <span class="tag-chip">有基础</span>
+            <span class="tag-chip">障碍</span>
+            <span class="tag-chip">竞技</span>
+          </div>
+          <button class="btn-navy-full" onclick="switchPage('booking')">立即预约</button>
+        </div>
+
+        <div class="card course-card-item">
+          <div class="course-header-row">
+            <span class="course-nm">舞步专项课</span>
+            <span class="level-badge">有基础</span>
+          </div>
+          <div class="placeholder" style="height:140px;">点击添加课程照片 / 视频</div>
+          <p class="course-desc-text">点击编辑课程简介，填写课程内容、适合人群、课程目标等详细信息</p>
+          <div class="tag-row">
+            <span class="tag-chip">有基础</span>
+            <span class="tag-chip">舞步</span>
+            <span class="tag-chip">平地</span>
+          </div>
+          <button class="btn-navy-full" onclick="switchPage('booking')">立即预约</button>
+        </div>
+      </div>
+
+      <!-- ===== 学员风采 ===== -->
+      <div class="page" id="page-students">
+        <span class="page-title-text">学员风采</span>
+
+        <div class="card">
+          <span class="section-title-text">精彩视频</span>
+          <div class="placeholder" style="height:180px;">点击添加学员视频</div>
+        </div>
+
+        <div class="card">
+          <span class="section-title-text">学员照片</span>
+          <div class="photo-grid">
+            <div class="placeholder grid-photo">添加照片</div>
+            <div class="placeholder grid-photo">添加照片</div>
+            <div class="placeholder grid-photo">添加照片</div>
+            <div class="placeholder grid-photo">添加照片</div>
+            <div class="placeholder grid-photo">添加照片</div>
+            <div class="placeholder grid-photo">添加照片</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="section-title-text">学员评价</span>
+          <div class="review-card">
+            <div class="review-head">
+              <div class="review-av">头像</div>
+              <div><div class="review-nm">学员昵称</div><div class="review-dt">2026.06</div></div>
+            </div>
+            <p class="review-txt">点击编辑学员评价内容，填写真实的学员反馈和心得体会</p>
+          </div>
+          <div class="review-card">
+            <div class="review-head">
+              <div class="review-av">头像</div>
+              <div><div class="review-nm">学员昵称</div><div class="review-dt">2026.05</div></div>
+            </div>
+            <p class="review-txt">点击编辑学员评价内容，填写真实的学员反馈和心得体会</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end screen-content -->
+
+    <!-- TabBar -->
+    <div class="tab-bar">
+      <div class="tab-item active" id="tab-home" onclick="switchPage('home')">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-label">首页</span>
+      </div>
+      <div class="tab-item" id="tab-booking" onclick="switchPage('booking')">
+        <span class="tab-icon">🗓</span>
+        <span class="tab-label">预约</span>
+      </div>
+      <div class="tab-item" id="tab-about" onclick="switchPage('about')">
+        <span class="tab-icon">🏇</span>
+        <span class="tab-label">马场</span>
+      </div>
+      <div class="tab-item" id="tab-courses" onclick="switchPage('courses')">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">课程</span>
+      </div>
+      <div class="tab-item" id="tab-students" onclick="switchPage('students')">
+        <span class="tab-icon">⭐</span>
+        <span class="tab-label">学员</span>
+      </div>
+    </div>
+
+    <!-- 弹窗：已约满 -->
+    <div class="modal-overlay" id="modal-full">
+      <div class="modal-box">
+        <span class="modal-emoji">😔</span>
+        <span class="modal-title">该日期已约满</span>
+        <span class="modal-desc">请选择其他日期</span>
+        <button class="modal-btn" onclick="closeModal('modal-full')">好的</button>
+      </div>
+    </div>
+
+    <!-- 弹窗：预约成功 -->
+    <div class="modal-overlay" id="modal-success">
+      <div class="modal-box">
+        <span class="modal-emoji">✅</span>
+        <span class="modal-title">预约成功！</span>
+        <span class="modal-desc">请添加微信：<strong>Sabrina</strong><br>教练会与你确认课程详情</span>
+        <button class="modal-btn" onclick="closeModal('modal-success')">好的</button>
+      </div>
+    </div>
+
+  </div><!-- end phone-screen -->
+</div><!-- end phone-shell -->
+
+<script>
+  // ===== 页面切换 =====
+  const pageNames = { home:'首页', booking:'课程预约', about:'马场介绍', courses:'课程介绍', students:'学员风采' }
+
+  function switchPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'))
+    document.getElementById('page-' + name).classList.add('active')
+    document.getElementById('tab-' + name).classList.add('active')
+    document.getElementById('nav-title').textContent = pageNames[name] || '尚岚马术'
+    document.getElementById('screen-content').scrollTop = 0
+  }
+
+  // ===== 日历 =====
+  const AVAILABLE = ['2026-06-11','2026-06-12','2026-06-13','2026-06-15','2026-06-17','2026-06-18','2026-06-20','2026-06-22','2026-06-24','2026-06-25','2026-06-27','2026-06-28']
+  const FULL = ['2026-06-14','2026-06-19','2026-06-21']
+
+  let calYear = 2026, calMonth = 6
+  let selectedDate = '', selectedCoach = '', selectedTime = ''
+
+  function buildCalendar() {
+    const label = document.getElementById('cal-month-label')
+    label.textContent = calYear + '年' + calMonth + '月'
+    const grid = document.getElementById('cal-grid')
+    grid.innerHTML = ''
+    const firstDay = new Date(calYear, calMonth - 1, 1).getDay()
+    const daysInMonth = new Date(calYear, calMonth, 0).getDate()
+
+    for (let i = 0; i < firstDay; i++) {
+      const empty = document.createElement('div')
+      empty.className = 'cal-day-cell'
+      grid.appendChild(empty)
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = calYear + '-' + String(calMonth).padStart(2,'0') + '-' + String(d).padStart(2,'0')
+      const cell = document.createElement('div')
+      cell.className = 'cal-day-cell'
+      const inner = document.createElement('div')
+      inner.textContent = d
+
+      if (AVAILABLE.includes(dateStr)) {
+        cell.classList.add('day-available')
+        inner.className = 'day-inner'
+        cell.onclick = () => selectDate(dateStr, cell)
+      } else if (FULL.includes(dateStr)) {
+        cell.classList.add('day-full')
+        inner.className = 'day-inner'
+        cell.onclick = () => document.getElementById('modal-full').classList.add('show')
+      } else {
+        cell.classList.add('day-disabled')
+        inner.className = 'day-inner'
+      }
+
+      if (dateStr === selectedDate) cell.classList.add('day-selected')
+      cell.appendChild(inner)
+      grid.appendChild(cell)
+    }
+  }
+
+  function changeMonth(dir) {
+    calMonth += dir
+    if (calMonth > 12) { calMonth = 1; calYear++ }
+    if (calMonth < 1) { calMonth = 12; calYear-- }
+    buildCalendar()
+  }
+
+  function selectDate(dateStr, cell) {
+    selectedDate = dateStr
+    selectedCoach = ''
+    selectedTime = ''
+    document.querySelectorAll('.cal-day-cell').forEach(c => c.classList.remove('day-selected'))
+    cell.classList.add('day-selected')
+    document.getElementById('coach-section').style.display = 'block'
+    document.getElementById('time-section').style.display = 'none'
+    document.getElementById('confirm-section').style.display = 'none'
+    document.querySelectorAll('.coach-card-item').forEach(c => c.classList.remove('selected'))
+    document.querySelectorAll('.time-chip').forEach(t => t.classList.remove('selected'))
+  }
+
+  function selectCoach(id, name) {
+    selectedCoach = name
+    document.querySelectorAll('.coach-card-item').forEach(c => c.classList.remove('selected'))
+    event.currentTarget.classList.add('selected')
+    document.getElementById('time-section').style.display = 'block'
+    document.getElementById('confirm-section').style.display = 'none'
+    selectedTime = ''
+    document.querySelectorAll('.time-chip').forEach(t => t.classList.remove('selected'))
+  }
+
+  function selectTime(el, time) {
+    selectedTime = time
+    document.querySelectorAll('.time-chip').forEach(t => t.classList.remove('selected'))
+    el.classList.add('selected')
+    document.getElementById('sum-date').textContent = '📅 ' + selectedDate
+    document.getElementById('sum-coach').textContent = '🏇 ' + selectedCoach
+    document.getElementById('sum-time').textContent = '🕐 ' + selectedTime
+    document.getElementById('confirm-section').style.display = 'block'
+  }
+
+  function confirmBooking() {
+    document.getElementById('modal-success').classList.add('show')
+    selectedDate = ''; selectedCoach = ''; selectedTime = ''
+    document.getElementById('coach-section').style.display = 'none'
+    document.getElementById('time-section').style.display = 'none'
+    document.getElementById('confirm-section').style.display = 'none'
+    buildCalendar()
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('show')
+  }
+
+  // 初始化
+  buildCalendar()
+</script>
+</body>
+</html>
